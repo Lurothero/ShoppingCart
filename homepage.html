@@ -306,46 +306,30 @@ SIDEBAR ENDS
                 <h2>Shipping Details</h2>
 
                 <div class="col-8">
-
                     <div class="card">
                         <div class="card-body">
-
                             <div class="col-6">
 
-                                <form>
-
+                                <form class="needs-validation" novalidate>
                                     <div class="row">
-
-
-
-
 
                                         <div class="col-6">
 
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" id="firstName" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your first name.
+                                            </div>
 
 
-                                            <label for="shippingDetails" class="form-label">First Name</label>
-
-                                            <input type="text" name="Details" id="shippingFirstName"
-                                                class="form-control is-invalid" aria-describedby="firstName" required>
-
-                                                <div class="invalid-feedback">
-
-                                                    
-
-                                                    Please enter your first name
-                                                </div>
-    
-                                            <label for="shippingDetails" class="form-label">Last Name</label>
-
-                                            <input type="text" name="Details" id="shippingLastName" class="form-control is-invalid"
-                                                aria-describedby="lastName" required>
 
 
-                                                <div class="invalid-feedback">
-                                                    Please enter your last name
-                                                </div>
-    
+                                            <label for="lastName" class="form-label">Last Name</label>
+                                            <input type="text" id="lastName" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your last name
+                                            </div>
+
 
                                         </div>
 
@@ -355,26 +339,25 @@ SIDEBAR ENDS
 
                                             <label for="shippingDetails" class="form-label">Address</label>
 
-                                            <input type="text" name="Address" id="shippingAddress" class="form-control is-invalid"
-                                                aria-describedby="address" required>
+                                            <input type="text" name="Address" id="shippingDetails" class="form-control"
+                                                required>
+                                            <div class="invalid-feedback">
+                                                Please enter your address
+                                            </div>
 
-
-                                                <div class="invalid-feedback">
-                                                    Please enter your address
-                                                </div>
-    
 
                                         </div>
 
                                         <div class="col-12">
 
 
-                                            <label for="shippingDetails" class="form-label">Apartment, Suite etc.
+                                            <label for="shippingAddressApartment" class="form-label">Apartment, Suite
+                                                etc.
                                                 (optional)
                                             </label>
 
                                             <input type="text" name="apartment" id="shippingAddressApartment"
-                                                class="form-control" aria-describedby="apartment">
+                                                class="form-control">
 
 
 
@@ -383,79 +366,77 @@ SIDEBAR ENDS
                                         <div class="col-12">
 
 
-                                            <label for="shippingDetails" class="form-label">City</label>
+                                            <label for="shippingCity" class="form-label">City</label>
 
-                                            <input type="text" name="City" id="shippingCity" class="form-control is-invalid"
-                                                aria-describedby="city" required>
+                                            <input type="text" name="City" id="shippingCity" class="form-control"
+                                                required>
 
 
-                                                <div class="invalid-feedback">
-                                                    Please enter your city
-                                                </div>
-    
+                                            <div class="invalid-feedback">
+                                                Please enter your city
+                                            </div>
+
 
                                         </div>
 
                                         <div class="col-12">
 
 
-                                            <label for="shippingDetails" class="form-label">Country</label>
+                                            <label for="countrySelect" class="form-label">Country</label>
 
-                                            <select class="form-select" aria-label="Default select example" required>
+                                            <select class="form-select" id="countrySelect"
+                                                aria-label="Default select example" required>
                                                 <option value="1">Belize</option>
                                                 <option value="2">United States of America</option>
                                                 <option value="3">United Kingdom</option>
                                             </select>
 
 
-                                            
+
 
                                         </div>
 
                                         <div class="col-12">
 
 
-                                            <label for="shippingDetails" class="form-label">Phone</label>
+                                            <label for="shippingPhoneNumber" class="form-label">Phone</label>
 
 
 
-                                            <input type="tel" name="Phone" id="shippingPhoneNumber" class="form-control is-invalid"
-                                                aria-describedby="phone" placeholder="+501 444-444" required>
+                                            <input type="tel" name="Phone" id="shippingPhoneNumber" class="form-control"
+                                                placeholder="+501 444-444" required>
 
 
-                                                <div class="invalid-feedback">
-                                                    Please enter a valid phone number
-                                                </div>
-    
+                                            <div class="invalid-feedback">
+                                                Please enter a valid phone number
+                                            </div>
+
 
                                         </div>
-
-
-                                        <div class="col-12">
-                                            <button class="btn btn-primary" type="submit">Confirm and Pay</button>
-                                        </div>
-
 
 
                                     </div>
-
-
+                                   
+                                    <button type="submit" class="btn btn-primary">Confirm and Pay</button>
                                 </form>
 
 
+
+
+
+
+
+
+
+
+
+
+
+                                
+
+
+
                             </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
                         </div>
                     </div>
@@ -680,19 +661,15 @@ FOOTER
         crossorigin="anonymous"></script>
 
 
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js" 
-integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
-</script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
+        </script>
+
     <script type="text/javascript" src="sidebar.js"></script>
 
-    <script  type = "text/javascript" src="formvalid.js"></script>
+    <script type="text/javascript" src="jqeffects.js"></script>
 
-
-    <script>
-        $( document ).click(function() {
-          $( "#shippingFirstName" ).effect( "shake" );
-        });
-        </script>
+    <script type="text/javascript" src="formvalidation.js"></script>
 
 
 </body>
