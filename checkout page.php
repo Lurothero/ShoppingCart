@@ -36,7 +36,37 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 ?>
 
+<script>
 
+function calcPrice(unitPrice,quantity){
+
+var price = unitPrice * quantity;
+
+return price;
+
+}
+
+function calcGST(price){
+
+var GST = price * 1.125;
+
+return GST;
+
+
+}
+
+function totalPrice(priceTotal,gst,extra){
+
+var finalPrice = priceTotal + gst + extra;
+
+return finalPrice;
+
+}
+
+
+
+
+</script>
 
 
 
