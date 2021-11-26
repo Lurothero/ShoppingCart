@@ -215,6 +215,11 @@ SIDEBAR ENDS
 -->
 
 
+
+
+
+
+
     <!--
 
     Specific Block Here
@@ -224,271 +229,138 @@ SIDEBAR ENDS
 
 
 
-    <div class="checkout" style="display:none;">
 
-        <div class="container">
+<?php
+// Initialize the session
+session_start();
+ 
+// Check if the user is already logged in, if yes then redirect him to welcome page
+if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
+    header("location: welcome.php");
+    exit;
+}
+ 
+// Include config file
+require_once "config.php";
+ 
+// Define variables and initialize with empty values
+$username = $password = "";
+$username_err = $password_err = $login_err = "";
+ 
+// Processing form data when form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+ 
+    // Check if username is empty
+    if(empty(trim($_POST["username"]))){
+        $username_err = "Please enter username.";
+    } else{
+        $username = trim($_POST["username"]);
+    }
+    
+    // Check if password is empty
+    if(empty(trim($_POST["password"]))){
+        $password_err = "Please enter your password.";
+    } else{
+        $password = trim($_POST["password"]);
+    }
+    
+    // Validate credentials
+    if(empty($username_err) && empty($password_err)){
+        // Prepare a select statement
+        $sql = "SELECT id, username, password FROM users WHERE username = ?";
+        
+        if($stmt = mysqli_prepare($link, $sql)){
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "s", $param_username);
+            
+            // Set parameters
+            $param_username = $username;
+            
+            // Attempt to execute the prepared statement
+            if(mysqli_stmt_execute($stmt)){
+                // Store result
+                mysqli_stmt_store_result($stmt);
+                
+                // Check if username exists, if yes then verify password
+                if(mysqli_stmt_num_rows($stmt) == 1){                    
+                    // Bind result variables
+                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
+                    if(mysqli_stmt_fetch($stmt)){
+                        if(password_verify($password, $hashed_password)){
+                            // Password is correct, so start a new session
+                            session_start();
+                            
+                            // Store data in session variables
+                            $_SESSION["loggedin"] = true;
+                            $_SESSION["id"] = $id;
+                            $_SESSION["username"] = $username;                            
+                            
+                            // Redirect user to welcome page
+                            header("location: welcome.php");
+                        } else{
+                            // Password is not valid, display a generic error message
+                            $login_err = "Invalid username or password.";
+                        }
+                    }
+                } else{
+                    // Username doesn't exist, display a generic error message
+                    $login_err = "Invalid username or password.";
+                }
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
 
-            <div class="row">
+            // Close statement
+            mysqli_stmt_close($stmt);
+        }
+    }
+    
+    // Close connection
+    mysqli_close($link);
+}
+?>
+ 
 
-                <h2>Product Review</h2>
+    <style>
+        body{ font: 14px sans-serif; }
+        .wrapper{ width: 360px; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h2>Login</h2>
+        <p>Please fill in your credentials to login.</p>
 
-                <div class="col-9">
+        <?php 
+        if(!empty($login_err)){
+            echo '<div class="alert alert-danger">' . $login_err . '</div>';
+        }        
+        ?>
 
-
-                    <div class="card mb-3">
-                        <div class="card-body">
-
-                            <div class="row pr-3">
-
-                                <div class="col-lg-2 md-4">
-                                    <img src="assets/51f6hwGlOoL.png" alt="Product" id="productThumbnail"
-                                        class="card-img-left mr-3">
-                                </div>
-
-                                <div class="col-5 ml-3">
-                                    <h3>Product name</h3>
-                                    <p>Kind Girls</p>
-
-                                    <h3>Price</h3>
-                                    <p>$99.99</p>
-
-                                    <h3>Quantity</h3>
-
-                                    <div class="col-2">
-
-                                        <select class="form-select form-select-sm" aria-label="Default select example">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                        </select>
-
-                                    </div>
-
-
-                                </div>
-
-
-                                <div class="col-5">
-
-                                    <h3>Delivery</h3>
-
-                                    <div class="form-check">
-
-
-                                        <input class="DeliverySelect" type="radio" name="deliveryTime"
-                                            id="deliveryRegular" checked>
-                                        <label class="DeliveryType" for="flexRadioDefault1">
-                                            Standard Shipping
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="DeliverySelect" type="radio" name="deliveryTime"
-                                            id="deliveryExpress">
-                                        <label class="DeliveryType" for="flexRadioDefault2">
-                                            Express Shipping
-                                        </label>
-                                    </div>
-
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
+                <span class="invalid-feedback"><?php echo $username_err; ?></span>
+            </div>    
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
+                <span class="invalid-feedback"><?php echo $password_err; ?></span>
             </div>
-
-
-            <div class="row">
-
-
-
-                <h2>Shipping Details</h2>
-
-                <div class="col-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="col-6">
-
-                                <form class="needs-validation" novalidate>
-                                    <div class="row">
-
-                                        <div class="col-6">
-
-                                            <label for="firstName" class="form-label">First Name</label>
-                                            <input type="text" id="firstName" class="form-control" required>
-                                            <div class="invalid-feedback">
-                                                Please enter your first name.
-                                            </div>
-
-
-
-
-                                            <label for="lastName" class="form-label">Last Name</label>
-                                            <input type="text" id="lastName" class="form-control" required>
-                                            <div class="invalid-feedback">
-                                                Please enter your last name
-                                            </div>
-
-
-                                        </div>
-
-
-                                        <div class="col-12">
-
-
-                                            <label for="shippingDetails" class="form-label">Address</label>
-
-                                            <input type="text" name="Address" id="shippingDetails" class="form-control"
-                                                required>
-                                            <div class="invalid-feedback">
-                                                Please enter your address
-                                            </div>
-
-
-                                        </div>
-
-                                        <div class="col-12">
-
-
-                                            <label for="shippingAddressApartment" class="form-label">Apartment, Suite
-                                                etc.
-                                                (optional)
-                                            </label>
-
-                                            <input type="text" name="apartment" id="shippingAddressApartment"
-                                                class="form-control">
-
-
-
-                                        </div>
-
-                                        <div class="col-12">
-
-
-                                            <label for="shippingCity" class="form-label">City</label>
-
-                                            <input type="text" name="City" id="shippingCity" class="form-control"
-                                                required>
-
-
-                                            <div class="invalid-feedback">
-                                                Please enter your city
-                                            </div>
-
-
-                                        </div>
-
-                                        <div class="col-12">
-
-
-                                            <label for="countrySelect" class="form-label">Country</label>
-
-                                            <select class="form-select" id="countrySelect"
-                                                aria-label="Default select example" required>
-                                                <option value="1">Belize</option>
-                                                <option value="2">United States of America</option>
-                                                <option value="3">United Kingdom</option>
-                                            </select>
-
-
-
-
-                                        </div>
-
-                                        <div class="col-12">
-
-
-                                            <label for="shippingPhoneNumber" class="form-label">Phone</label>
-
-
-
-                                            <input type="tel" name="Phone" id="shippingPhoneNumber" class="form-control"
-                                                placeholder="+501 444-444" required>
-
-
-                                            <div class="invalid-feedback">
-                                                Please enter a valid phone number
-                                            </div>
-
-
-                                        </div>
-
-
-                                    </div>
-                                   
-                                    <button type="submit" class="btn btn-primary">Confirm and Pay</button>
-                                </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                
-
-
-
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-
-
-
-
-
-
-                <div class="row">
-                    <h2>Overview</h2>
-
-
-                    <div class="col-3">
-                        <div class="card">
-                            <div class="card-body">
-
-                                <div class="row">
-
-
-                                    <div class="col">
-
-                                        <h4 style="text-align: left;">Subtotal</h4>
-                                        <p style="text-align: right;">$99.99</p>
-
-                                        <h4 style="text-align: left;">Shipping Tax</h4>
-                                        <p style="text-align: right;">$9.99</p>
-
-                                        <hr class="solid">
-
-                                        <h4 style="text-align: left;">Order Total</h4>
-                                        <p style="text-align: right;">$109.98</p>
-
-
-
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Login">
             </div>
-
-        </div>
+            <p>Don't have an account? <a href="homepage signup.php">Sign up now</a>.</p>
+        </form>
     </div>
+
+
+
+
+
+
+   
 
     <!--
 FOOTER
@@ -651,7 +523,7 @@ FOOTER
             </div>
             <!-- Copyright -->
         </footer>
-        <!-- Footer -->
+        <!-- Footer -->a
 
     </div>
 
@@ -661,15 +533,19 @@ FOOTER
         crossorigin="anonymous"></script>
 
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
-        </script>
-
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" 
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
+</script>
     <script type="text/javascript" src="sidebar.js"></script>
 
-    <script type="text/javascript" src="jqeffects.js"></script>
+    <script  type = "text/javascript" src="formvalid.js"></script>
 
-    <script type="text/javascript" src="formvalidation.js"></script>
+
+    <script>
+        $( document ).click(function() {
+          $( "#shippingFirstName" ).effect( "shake" );
+        });
+        </script>
 
 
 </body>

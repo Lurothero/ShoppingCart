@@ -1,13 +1,63 @@
+
+<?php
+session_start();
+
+include 'php database files/ecomDB.php';
+
+
+$user = $_SESSION["username"];
+
+$tablename = $user . "table";//SPACE MUST BE KEPT
+
+
+
+ $sql = "SELECT $tablename.itemID, SUM($tablename.quantity), product_detail.item_price FROM `$tablename`,`product_detail` WHERE product_detail.item_id = $tablename.itemID
+ GROUP BY $tablename.itemID";
+
+$result = mysqli_query($connect, $sql);
+
+
+if (mysqli_num_rows($result)>0) {
+
+echo "good";
+
+
+
+while ($row = mysqli_fetch_assoc($result)) {
+
+    echo $row["itemID"]. "has :". $row["SUM($tablename.quantity)"]. "at: ". $row["item_price"];
+
+}
+
+}else{
+
+
+    echo "No results";
+}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 
 
 <html>
 
 <head>
-
-    <script src="https://kit.fontawesome.com/cee9ca7456.js" crossorigin="anonymous"></script>
-
-
     <title>
 
 
@@ -29,11 +79,6 @@
 
 
 
-    }
-
-    .productImage{
-        width: auto;
-        
     }
 
     .socialIcon {
@@ -216,194 +261,282 @@ SIDEBAR STARTS
     </div>
 
 
-    <!--SIDEBAR ENDS-->
+
+    <!--
+SIDEBAR ENDS
+
+
+-->
+
+
+    <!--
+
+    Specific Block Here
+
+-->
 
 
 
 
+    <div class="checkout" style="display:none;">
+
+        <div class="container">
+
+            <div class="row">
+
+                <h2>Product Review</h2>
+
+                <div class="col-9">
 
 
+                    <div class="card mb-3">
+                        <div class="card-body">
 
-    <!--Specific Block Here-->
+                            <div class="row pr-3">
 
-    <div class="container pt-5">
-
-
-
-        <div class="row">
-            <!-- MAIN CARD HERE -->
-
-
-            <div class="col-4">
-                <!-- PRODUCT IMAGE -->
-            
-
-
-
-                <div id="productSlides" class="carousel slide" data-bs-ride="carousel">
-
-                    <div class="carousel-inner">
-                        <div class="carousel-item active"  data-bs-interval="false">
-                            <img src="assets/51f6hwGlOoL.png" class="d-block w-100 productImage" alt="...">
-                        </div>
-
-                        <!--
-                                ADD OTHER PRODUCT IMAGE IN THIS CLASS
-
-                                <div class="carousel-item "data-bs-interval="false">
-                                    <img src="assets/user.png" class="d-block w-100 productImage" alt="...">
+                                <div class="col-lg-2 md-4">
+                                    <img src="assets/51f6hwGlOoL.png" alt="Product" id="productThumbnail"
+                                        class="card-img-left mr-3">
                                 </div>
 
-                        --> 
+                                <div class="col-5 ml-3">
+                                    <h3>Product name</h3>
+                                    <p>Kind Girls</p>
+
+                                    <h3>Price</h3>
+                                    <p>$99.99</p>
+
+                                    <h3>Quantity</h3>
+
+                                    <div class="col-2">
+
+                                        <label for="quantitySelect"></label>';                      
+                                        <input type="number" name="Quantity" id="quantitySelect" min="1" max="100" value="1" step="1">';   
+
+                                    </div>
+
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+              
+
+                <div class="col-3">
+                    <h2>Overview</h2>
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="row">
+
+
+                                <div class="col">
+
+                                    <h4 style="text-align: left;">Subtotal</h4>
+                                    <p style="text-align: right;">$99.99</p>
+
+                                    <h4 style="text-align: left;">Shipping Tax</h4>
+                                    <p style="text-align: right;">$9.99</p>
+
+                                    <hr class="solid">
+
+                                    <h4 style="text-align: left;">Order Total</h4>
+                                    <p style="text-align: right;">$109.98</p>
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <button class="carousel-control-prev" type="button" data-bs-target="#productSlides"
-                        data-bs-slide="prev">
-                        <span class="fas fa-arrow-left" aria-hidden="true" style="color: black;"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#productSlides"
-                        data-bs-slide="next">
-                        <span class="fas fa-arrow-right" aria-hidden="true" style="color: black;"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+                    <h3>Delivery</h3>
+
+                    <div class="form-check">
+
+
+                        <input class="DeliverySelect" type="radio" name="deliveryTime" id="deliveryRegular" checked>
+                        <label class="DeliveryType" for="flexRadioDefault1">
+                            Standard Shipping
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="DeliverySelect" type="radio" name="deliveryTime" id="deliveryExpress">
+                        <label class="DeliveryType" for="flexRadioDefault2">
+                            Express Shipping
+                        </label>
+                    </div>
                 </div>
+
+
+
 
 
             </div>
 
 
-            <div class="col-6">
-                <!-- PRODUCT DESCRIPTION PARTS  -->
+
+            <div class="row">
+                
+
+
+                
+            </div>
+
+            <div class="row">
 
 
 
-                <div class="row">
-                    <!-- TITLE AND REVIEW BLOCK-->
+                <h2>Shipping Details</h2>
 
-                    <div class="col-12">
-                        <h2><b>Kind Girls</b> </h2> <br>
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-6">
 
-                        <h5>Product Rating <a href="#hi">add your review </a> </h5>
+                                <form class="needs-validation" novalidate>
+                                    <div class="row">
 
-                        <div>
-                            <span><i class="fas fa-star"></i></span>
-                            <span><i class="fas fa-star"></i></span>
-                            <span><i class="fas fa-star"></i></span>
-                            <span><i class="fas fa-star"></i></span>
+                                        <div class="col-6">
+
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" id="firstName" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your first name.
+                                            </div>
+
+
+
+
+                                            <label for="lastName" class="form-label">Last Name</label>
+                                            <input type="text" id="lastName" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter your last name
+                                            </div>
+
+
+                                        </div>
+
+
+                                        <div class="col-12">
+
+
+                                            <label for="shippingDetails" class="form-label">Address</label>
+
+                                            <input type="text" name="Address" id="shippingDetails" class="form-control"
+                                                required>
+                                            <div class="invalid-feedback">
+                                                Please enter your address
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="col-12">
+
+
+                                            <label for="shippingAddressApartment" class="form-label">Apartment, Suite
+                                                etc.
+                                                (optional)
+                                            </label>
+
+                                            <input type="text" name="apartment" id="shippingAddressApartment"
+                                                class="form-control">
+
+
+
+                                        </div>
+
+                                        <div class="col-12">
+
+
+                                            <label for="shippingCity" class="form-label">City</label>
+
+                                            <input type="text" name="City" id="shippingCity" class="form-control"
+                                                required>
+
+
+                                            <div class="invalid-feedback">
+                                                Please enter your city
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="col-12">
+
+
+                                            <label for="countrySelect" class="form-label">Country</label>
+
+                                            <select class="form-select" id="countrySelect"
+                                                aria-label="Default select example" required>
+                                                <option value="1">Belize</option>
+                                                <option value="2">United States of America</option>
+                                                <option value="3">United Kingdom</option>
+                                            </select>
+
+
+
+
+                                        </div>
+
+                                        <div class="col-12">
+
+
+                                            <label for="shippingPhoneNumber" class="form-label">Phone</label>
+
+
+
+                                            <input type="tel" name="Phone" id="shippingPhoneNumber" class="form-control"
+                                                placeholder="+501 444-444" required>
+
+
+                                            <div class="invalid-feedback">
+                                                Please enter a valid phone number
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Confirm and Pay</button>
+                                </form>
+
+
+
+
+
+                            </div>
 
                         </div>
-
-
-
-
-
                     </div>
+
                 </div>
 
-                <div class="row mt-4">
-                    <!-- CONDITION AND QUANTITY BLOCK -->
-
-                    <div class="col-4">
-
-                        <h4>Condition: <label>New</label></h3>
-
-                            <label for="quantitySelect"></label>
-                            <input type="number" name="" id="quantitySelect" min="1" max="100" value="1" step="1">
-
-                    </div>
-                </div>
-
-
-
-                <div class="row mt-4" style="background-color: beige;">
-                    <!-- PRICE BUTTONS AND DESCRIPTION BLOCK -->
-
-                    <div class="col-7">
-                        <h4>Price: <label>$99.99</label></h3>
-
-                    </div>
-
-
-                    <div class="col-5">
-
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary">Buy it Now</button><br>
-                            <button class="btn btn-info">Add to Cart</button>
-                        </div>
-
-
-
-
-                    </div>
-
-
-                    <div class="col-12">
-                        <h3>Description</h3>
-                        <p>This small, portable book presents a unique perspective on the human body for artists to
-                            study and implement in their drawing work. In this book, artist and teacher Michel
-                            Lauricella simplifies the human body into basic, synthetic shapes and forms, offering
-                            profound insight for artists of all kinds, sparking the imagination and improving one’s
-                            observational abilities. Rather than going the traditional route of memorizing a repertoire
-                            of poses, Lauricella instead stresses learning this small collection of forms, which can
-                            then be combined and shaped into the more complex and varied forms and postures we see in
-                            the living body. </p>
-
-                    </div>
-                </div>
             </div>
+
+
         </div>
-
-
-        <div class="row">
-            <!-- TECHNICAL INFO BLOCK SHOULD BE OUTSIDE -->
-
-
-            <div class="col">
-
-                <h3>Editorial Reviews </h3>
-                <hr>
-                <p>This is a test</p>
-
-            </div>
-        </div>
-
-        <div class="row">
-
-
-            <div class="col">
-
-                <h3>Product Details</h3>
-                <hr>
-                <ul>
-
-                    <li><b>Item Weight:</b> <label> 2 lb</label></li>
-                    <li><b>Dimensions:</b> <label>12 x 34 x 6 inches</label></li>
-
-                </ul>
-
-
-            </div>
-        </div>
-
 
     </div>
 
 
+    <!--
+FOOTER
 
-
-
-
-
-
-
-
-
-
-
-
-
-    <!--FOOTER-->
+-->
 
 
     <div id="footer">
@@ -561,7 +694,7 @@ SIDEBAR STARTS
             </div>
             <!-- Copyright -->
         </footer>
-        <!-- Footer -->a
+        <!-- Footer -->
 
     </div>
 
@@ -574,16 +707,12 @@ SIDEBAR STARTS
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
         </script>
+
     <script type="text/javascript" src="sidebar.js"></script>
 
-    <script type="text/javascript" src="formvalid.js"></script>
+    <script type="text/javascript" src="jqeffects.js"></script>
 
-
-    <script>
-        $(document).click(function () {
-            $("#shippingFirstName").effect("shake");
-        });
-    </script>
+    <script type="text/javascript" src="formvalidation.js"></script>
 
 
 </body>
