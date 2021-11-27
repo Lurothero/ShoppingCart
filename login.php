@@ -93,7 +93,7 @@
             <div class="col-2">
 
 
-                <a href="#" class="navbar-brand">
+                <a href="product description.php" class="navbar-brand">
                     <img src="assets/logo.png" alt="logo" id="logo">
                     Generic Shop
                 </a>
@@ -117,12 +117,11 @@
             <div class="col-1 ps-5 text-center">
 
 
-                <a href="#">
+            <a href="checkout page.php">
                     <img src="assets/shopping-cart.png" alt="cart" id="toCart">
                     <p>Cart</p>
 
                 </a>
-
 
             </div>
 
@@ -200,8 +199,8 @@ SIDEBAR STARTS
 
     <div id="mySidenav" class="sidenav bg-dark">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
+        <a href="login.php">Sign In</a>
+        <a href="logout.php">Sign Out</a>
         <a href="#">Clients</a>
         <a href="#">Contact</a>
     </div>

@@ -9,7 +9,7 @@ $user = $_SESSION["username"];
 
 $tablename = $user . "table";//SPACE MUST BE KEPT
 
-
+$tally = 0;
 
  $sql = "SELECT $tablename.itemID, SUM($tablename.quantity), product_detail.item_price FROM `$tablename`,`product_detail` WHERE product_detail.item_id = $tablename.itemID
  GROUP BY $tablename.itemID";
@@ -19,15 +19,22 @@ $result = mysqli_query($connect, $sql);
 
 if (mysqli_num_rows($result)>0) {
 
-echo "good";
+
 
 
 
 while ($row = mysqli_fetch_assoc($result)) {
 
-    echo $row["itemID"]. "has :". $row["SUM($tablename.quantity)"]. "at: ". $row["item_price"];
+   # echo $row["itemID"]. "has :". $row["SUM($tablename.quantity)"]. "at: ". $row["item_price"];
+    $temp= 0;
 
+   
+    $temp = $temp + ($row["SUM($tablename.quantity)"]*$row["item_price"]);
+
+    $tally = $tally + $temp;
 }
+
+
 
 }else{
 
@@ -35,8 +42,17 @@ while ($row = mysqli_fetch_assoc($result)) {
     echo "No results";
 }
 ?>
-
 <script>
+
+// Create our number formatter.
+var formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+
+});
+
+
+
 
 function calcPrice(unitPrice,quantity){
 
@@ -48,9 +64,9 @@ return price;
 
 function calcGST(price){
 
-var GST = price * 1.125;
+var GST = price * 0.125;
 
-return GST;
+return GST.toFixed(2);
 
 
 }
@@ -67,6 +83,9 @@ return finalPrice;
 
 
 </script>
+
+
+
 
 
 
@@ -132,7 +151,7 @@ return finalPrice;
 
 
         height: 200px;
-        width: auto;
+        width: 150px;
     }
 
 
@@ -177,7 +196,7 @@ return finalPrice;
             <div class="col-2">
 
 
-                <a href="#" class="navbar-brand">
+                <a href="product description.php" class="navbar-brand">
                     <img src="assets/logo.png" alt="logo" id="logo">
                     Generic Shop
                 </a>
@@ -200,13 +219,11 @@ return finalPrice;
 
             <div class="col-1 ps-5 text-center">
 
-
-                <a href="#">
+            <a href="checkout page.php">
                     <img src="assets/shopping-cart.png" alt="cart" id="toCart">
                     <p>Cart</p>
 
                 </a>
-
 
             </div>
 
@@ -284,8 +301,8 @@ SIDEBAR STARTS
 
     <div id="mySidenav" class="sidenav bg-dark">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
+        <a href="login.php">Sign In</a>
+        <a href="logout.php">Sign Out</a>
         <a href="#">Clients</a>
         <a href="#">Contact</a>
     </div>
@@ -316,44 +333,69 @@ SIDEBAR ENDS
 
                 <h2>Product Review</h2>
 
-                <div class="col-9">
+             
+ <?php
+ 
+ $sqlnext = "SELECT $tablename.itemID, SUM($tablename.quantity), product_detail.item_price, product_detail.item_name, product_detail.item_image FROM `$tablename`,`product_detail` WHERE product_detail.item_id = $tablename.itemID
+ GROUP BY $tablename.itemID";
+ 
+$result = mysqli_query($connect, $sqlnext);
 
 
-                    <div class="card mb-3">
-                        <div class="card-body">
+if (mysqli_num_rows($result)>0) {
 
-                            <div class="row pr-3">
-
-                                <div class="col-lg-2 md-4">
-                                    <img src="assets/51f6hwGlOoL.png" alt="Product" id="productThumbnail"
-                                        class="card-img-left mr-3">
-                                </div>
-
-                                <div class="col-5 ml-3">
-                                    <h3>Product name</h3>
-                                    <p>Kind Girls</p>
-
-                                    <h3>Price</h3>
-                                    <p>$99.99</p>
-
-                                    <h3>Quantity</h3>
-
-                                    <div class="col-2">
-
-                                        <label for="quantitySelect"></label>';                      
-                                        <input type="number" name="Quantity" id="quantitySelect" min="1" max="100" value="1" step="1">';   
-
-                                    </div>
+	while ($row = mysqli_fetch_assoc($result)) {
+ 
+ 
+ echo '<div class="col-9">';
 
 
-                                </div>
+ echo '<div class="card mb-3">';                   
+        echo '<div class="card-body">';                
+
+               echo '<div class="row pr-3">';             
+
+ echo '<div class="col-lg-2 md-4">';                               
+echo '<img src="'.$row["item_image"].'" alt="Product" id="productThumbnail" class="card-img-left mr-3">';                                    
+ echo '  </div>';                             
+
+ echo '<div class="col-5 ml-3">';                               
+ echo '<h3>Product name</h3>';                                   
+ echo ' <p> '.$row["item_name"].'</p>';                                  
+
+ echo '<h3>Price</h3>';                                   
+ echo '<p> '.$row["item_price"].'</p>';                                   
+
+  echo '<h3>Quantity</h3>';                                  
+
+  echo '<div class="col-2">';                                  
+
+  echo '<label for="quantitySelect"></label>';                                                            
+   echo '<input type="number" name="Quantity" id="quantitySelect" min="1" max="100" value="'.$row["SUM($tablename.quantity)"].'" step="1">';                                       
+
+   echo '</div>';                                 
+
+
+  echo '</div>';                              
 
 
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
+   echo '</div>';                         
+  echo ' </div>';                     
+   echo '</div>';                
+   echo '</div>';             
+ 
+ 
+	}
+}
+ ?>
+ 
+
+
+
+
+
+
 
 
 
@@ -371,15 +413,22 @@ SIDEBAR ENDS
                                 <div class="col">
 
                                     <h4 style="text-align: left;">Subtotal</h4>
-                                    <p style="text-align: right;">$99.99</p>
+                                    <p style="text-align: right;" id="price"><script>document.getElementById("price").innerHTML = formatter.format(<?php echo $tally;?>) ;</script></p>
+                                
+                                
+                                
+                                
+                                
+                                </p>
 
-                                    <h4 style="text-align: left;">Shipping Tax</h4>
-                                    <p style="text-align: right;">$9.99</p>
-
+                                    <h4 style="text-align: left;">GST</h4>
+                                
+                                    <p style="text-align: right;" id ="GSTprice"><script>document.getElementById("GSTprice").innerHTML = formatter.format(calcGST(<?php echo $tally;?>)) ;</script></p>
+                                                                         
                                     <hr class="solid">
 
                                     <h4 style="text-align: left;">Order Total</h4>
-                                    <p style="text-align: right;">$109.98</p>
+                                    <p style="text-align: right;" id ="everything"><script>document.getElementById("everything").innerHTML = formatter.format(totalPrice(parseFloat(<?php echo $tally;?>),parseFloat(calcGST(<?php echo $tally;?>)),0));</script></p>
 
 
 
@@ -434,7 +483,9 @@ SIDEBAR ENDS
                         <div class="card-body">
                             <div class="col-6">
 
-                                <form class="needs-validation" novalidate>
+                                <form action="printReceipt.php" method="post" class="needs-validation" novalidate>
+
+                              
                                     <div class="row">
 
                                         <div class="col-6">

@@ -102,7 +102,7 @@
             <div class="col-2">
 
 
-                <a href="#" class="navbar-brand">
+                <a href="product description.php" class="navbar-brand">
                     <img src="assets/logo.png" alt="logo" id="logo">
                     Generic Shop
                 </a>
@@ -126,7 +126,7 @@
             <div class="col-1 ps-5 text-center">
 
 
-                <a href="#">
+            <a href="checkout page.php">
                     <img src="assets/shopping-cart.png" alt="cart" id="toCart">
                     <p>Cart</p>
 
